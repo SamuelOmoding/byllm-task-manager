@@ -99,6 +99,13 @@ st.markdown("""
 BASE_URL = "http://localhost:8000"
 TASK_MANAGER_ENDPOINT = f"{BASE_URL}/walker/task_manager"
 GET_ALL_TASKS_ENDPOINT = f"{BASE_URL}/walker/get_all_tasks"
+# Default token for authenticated requests
+DEFAULT_TOKEN = "G5UzrZllONJwny4B-qNF9NajBTMe7RWyfdkrK0Hd4ns"
+
+# # --- CONSTANTS ---
+# BASE_URL = "http://localhost:8000"
+# TASK_MANAGER_ENDPOINT = f"{BASE_URL}/walker/task_manager"
+# GET_ALL_TASKS_ENDPOINT = f"{BASE_URL}/walker/get_all_tasks"
 
 # --- SESSION STATE INIT ---
 if 'session_id' not in st.session_state:
@@ -222,9 +229,12 @@ with tab1:
         else:
             payload = {"utterance": prompt, "session_id": st.session_state.session_id}
         with st.spinner("Thinking..."):
-            # headers = {"Authorization": "Bearer G5UzrZllONJwny4B-qNF9NajBTMe7RWyfdkrK0Hd4ns"}
-            headers = {"Authorization": f"Bearer {st.session_state.get('auth_token', '')}"}
+            headers = {"Authorization": f"Bearer {DEFAULT_TOKEN}"}
             res = requests.post(TASK_MANAGER_ENDPOINT, json=payload, headers=headers)
+        # with st.spinner("Thinking..."):
+        #     # headers = {"Authorization": "Bearer G5UzrZllONJwny4B-qNF9NajBTMe7RWyfdkrK0Hd4ns"}
+        #     headers = {"Authorization": f"Bearer {st.session_state.get('auth_token', '')}"}
+        #     res = requests.post(TASK_MANAGER_ENDPOINT, json=payload, headers=headers)
             if res.status_code == 200:
                 try:
                     reports = res.json().get("reports", [])
@@ -255,7 +265,9 @@ with tab2:
         with st.spinner("Loading tasks..."):
             try:
                 # headers = {"Authorization": "Bearer G5UzrZllONJwny4B-qNF9NajBTMe7RWyfdkrK0Hd4ns"}
-                headers = {"Authorization": f"Bearer {st.session_state.get('auth_token', '')}"}
+                # headers = {"Authorization": f"Bearer {st.session_state.get('auth_token', '')}"}
+                # res = requests.post(GET_ALL_TASKS_ENDPOINT, headers=headers)
+                headers = {"Authorization": f"Bearer {DEFAULT_TOKEN}"}
                 res = requests.post(GET_ALL_TASKS_ENDPOINT, headers=headers)
                 if res.status_code == 200:
                     data = res.json()
